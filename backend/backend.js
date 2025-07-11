@@ -20,20 +20,42 @@ const promptTemplate = readFileSync('tos-audit-prompt.md', 'utf8');
 
 // MySQL pool
 // host & port is localhost:3306
-// const pool = mysql.createPool({
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   password: process.env.DB_PASS,
-//   database: process.env.DB_NAME,
-//   waitForConnections: true,
-//   connectionLimit: 10,
-// });
-
-// hello world get request
-app.get('/api/hello', (req, res) => {
-  res.send('Hello World!');
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
 });
 
+// create a new account
+app.post('/api/create-account', async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: 'username and password required' });
+  }
+
+  try {
+
+    const hash = await bcrypt.hash(password, 10);
+
+    const [result] = await pool.execute(
+      'INSERT INTO users (username, pswd_hash) VALUES (?, ?)',
+      [username, hash]
+    );
+
+    res.json({ userId: result.insertId });
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ error: 'Username already exists' });
+    }
+    console.error('Account creation failed:', err);
+    res.status(500).json({ error: 'create account failed' });
+  }
+});
+
+// submit tos to AI agent for audit
 app.post('/api/submit-tos', async (req, res) => {
   try {
     const tosText = req.body.tos;

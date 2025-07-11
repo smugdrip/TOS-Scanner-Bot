@@ -16,7 +16,7 @@ function Login() {
     <Navbar/>
     <div className="container-fluid">
 
-      <div className="card p-4">
+      <div className="card p-4 w-100">
 
         <div className="row justify-content-center">
 
@@ -45,11 +45,9 @@ function Login() {
 
       </div>
 
-      <br></br>
-
-      <NavLink to="/create-account" end>
-        Create account here.
-      </NavLink>
+      <p className="mt-2">Don't have an account? <NavLink to="/create-account" end>
+        Create one here.
+      </NavLink></p>
 
     </div>
     </>
