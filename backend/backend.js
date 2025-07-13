@@ -113,9 +113,9 @@ app.post('/api/submit-tos', verifyToken, async (req, res) => {
     });
 
     const auditText = completion.output_text ?? '';
-    const auditScore = null;
-    const companyName = null;
-    const description = null;
+    const auditScore = 6.7;
+    const companyName = 'placeholder name';
+    const description = 'placeholder desc';
 
     await pool.execute(
       `INSERT INTO tos_audits (tos_text, audit_text, audit_score, company_name, description, user_id)
@@ -128,6 +128,31 @@ app.post('/api/submit-tos', verifyToken, async (req, res) => {
   } catch (err) {
     console.error('submit-tos failed:', err);
     return res.status(500).json({ error: 'Server error while submitting TOS' });
+  }
+});
+
+// get all audits for the current user
+app.get('/api/tos-by-user', verifyToken, async (req, res) => {
+  try {
+    const { userId } = req.user;
+
+    const [rows] = await pool.execute(
+      `SELECT id,
+              tos_text,
+              description,
+              audit_text,
+              audit_score,
+              company_name
+       FROM   tos_audits
+       WHERE  user_id = ?`,
+      [userId]
+    );
+
+    return res.json({ audits: rows });
+
+  } catch (err) {
+    console.error('get tos-by-user failed:', err);
+    return res.status(500).json({ error: 'Server error while fetching TOS' });
   }
 });
 
