@@ -1,7 +1,15 @@
 import Navbar from "./Navbar";
+import { useNavigate } from "react-router-dom";
 
 
 function Account() {
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   return(
     <>
@@ -13,6 +21,9 @@ function Account() {
             hello world
           </h1>
         </div>
+        <button type="button" className="btn btn-danger mt-5" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
     </div>
     </>

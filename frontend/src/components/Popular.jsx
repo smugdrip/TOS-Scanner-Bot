@@ -10,12 +10,8 @@ function Popular() {
           <h1>
             popular page here
           </h1>
-
-
         </div>
-
       </div>
-
     </div>
     </>
   );
