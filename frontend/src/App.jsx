@@ -4,6 +4,7 @@ import Login from './components/Login';
 import CreateAccount from './components/CreateAccount';
 import Account from './components/Account';
 import Popular from './components/Popular';
+import Recent from './components/Recent';
 import './App.css'
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Route path="/create-account" element={<CreateAccount/>} />
       <Route path="/account" element={<Account/>}/>
       <Route path="/popular" element={<Popular/>}/>
+      <Route path="/recent" element={<Recent/>}/>
     </Routes>
   )
 }

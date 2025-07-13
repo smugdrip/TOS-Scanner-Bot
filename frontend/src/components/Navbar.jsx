@@ -42,6 +42,11 @@ function Navbar() {
                 Popular
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/recent" end>
+                Recent
+              </NavLink>
+            </li>
 
           </ul>
           <ul className="navbar-nav ms-md-auto">

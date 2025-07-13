@@ -17,7 +17,7 @@ function Home() {
       const res = await fetch('/api/submit-tos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
          },
         body: JSON.stringify({ tos: tosText }),
       })
@@ -29,7 +29,7 @@ function Home() {
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
     <>

@@ -11,6 +11,8 @@ function Account() {
     navigate("/login");
   };
 
+  
+
   return(
     <>
     <Navbar/>
@@ -21,9 +23,14 @@ function Account() {
             hello world
           </h1>
         </div>
-        <button type="button" className="btn btn-danger mt-5" onClick={handleLogout}>
+        <button type="button" className="btn btn-danger my-5" onClick={handleLogout}>
           Logout
         </button>
+      </div>
+      <div className="row">
+        <div className="card p-4">
+          {/* store list of this user's submitted tos + audits. */}
+        </div>
       </div>
     </div>
     </>

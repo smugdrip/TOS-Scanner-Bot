@@ -32,24 +32,19 @@ const pool = mysql.createPool({
 
 // login to existing account and generate a jwt
 app.post('/api/login', async (req, res) => {
-  
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ error: 'username and password required' });
   }
-
   try {
     const [users] = await  pool.execute(
       'SELECT * FROM users WHERE username = ?',
       [username]
     );
-
     if (users.length === 0) {
       return res.status(401).json({ error: 'username doesnt exist' });
     }
-
     const user = users[0];
-
     const match = await bcrypt.compare(password, user.pswd_hash);
     if (match) {
       const token = jwt.sign(
@@ -61,12 +56,10 @@ app.post('/api/login', async (req, res) => {
     } else {
       return res.status(401).json({error: 'wrong password'});
     }
-    
   } catch (err) {
     console.error('error loggin in:', err);
     return res.status(500).json({ error: 'server error when logging in' });
   }
-
 });
 
 // create a new account
@@ -97,34 +90,63 @@ app.post('/api/create-account', async (req, res) => {
 // submit tos to AI agent for audit
 app.post('/api/submit-tos', verifyToken, async (req, res) => {
   try {
+
     const tosText = req.body.tos;
     if (!tosText) {
       return res.status(400).json({ error: 'tos field missing' });
     }
+
+    const { userId } = req.user;
+
+    const [userRows] = await pool.execute(
+      'SELECT id FROM users WHERE id = ?',
+      [userId]
+    );
+    if (userRows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
     const fullPrompt = promptTemplate.replace('{{TOS_TEXT}}', tosText);
     const completion = await openai.responses.create({
       model: 'gpt-4.1',
       input: fullPrompt,
     });
-    return res.json({ audit: completion.output_text });
+
+    const auditText = completion.output_text ?? '';
+    const auditScore = null;
+    const companyName = null;
+    const description = null;
+
+    await pool.execute(
+      `INSERT INTO tos_audits (tos_text, audit_text, audit_score, company_name, description, user_id)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [tosText, auditText, auditScore, companyName, description, userId]
+    );
+
+    return res.json({ audit: auditText });
 
   } catch (err) {
-    console.error('OpenAI call failed: ', err);
-    return res.status(500).json({ error: 'OpenAI call failed' });
+    console.error('submit-tos failed:', err);
+    return res.status(500).json({ error: 'Server error while submitting TOS' });
   }
 });
 
+// verify the jwt and decode user info for later use
 function verifyToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  const auth = req.headers.authorization;
+  if (!auth || !auth.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Missing token' });
+  }
 
-  if (!token) return res.sendStatus(401);
-
-  jwt.verify(token, secret, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
+  const token = auth.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, secret);
+    req.user = decoded;
     next();
-  });
+  } catch (err) {
+    console.error('JWT verification failed:', err);
+    return res.status(403).json({ error: 'Invalid or expired token' });
+  }
 }
 
 // start express server

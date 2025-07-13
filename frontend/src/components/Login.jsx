@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Navbar from './Navbar';
 import { NavLink } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
@@ -25,9 +24,6 @@ function Login() {
       if (!res.ok) throw new Error(`Server error ${res.status}`);
       const { token } = await res.json();
       localStorage.setItem('token', token);
-      const decoded = jwtDecode(token);
-      console.log(decoded.username);
-      console.log(decoded.userId);
       navigate('/');
 
     } catch (err) {
