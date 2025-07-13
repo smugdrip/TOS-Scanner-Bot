@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import Navbar from './Navbar';
 import { NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function CreateAccount() {
   
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigate = useNavigate();
 
   const createAccount = async() => {
 
@@ -24,7 +27,8 @@ function CreateAccount() {
       if (!res.ok) throw new Error(`Server error ${res.status}`)
       const result = await res.json();
       console.log(result.userId);
-
+      navigate('/login')
+      
     } catch (err) {
       console.error('Submission failed:', err)
     }

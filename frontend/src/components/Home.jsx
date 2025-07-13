@@ -16,7 +16,9 @@ function Home() {
     try {
       const res = await fetch('/api/submit-tos', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+         },
         body: JSON.stringify({ tos: tosText }),
       })
       if (!res.ok) throw new Error(`Server error ${res.status}`)
