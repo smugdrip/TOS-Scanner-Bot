@@ -38,13 +38,18 @@ function Navbar() {
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/popular" end>
-                Popular
+              <NavLink className="nav-link" to="/recent" end>
+                Recent
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/recent" end>
-                Recent
+              <NavLink className="nav-link" to="/worst" end>
+                Worst
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/best" end>
+                Best
               </NavLink>
             </li>
 

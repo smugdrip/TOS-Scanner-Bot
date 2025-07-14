@@ -43,12 +43,12 @@ function Account() {
         <h1>
           hello {username}!
         </h1>
-        <button type="button" className="btn btn-danger my-5" onClick={handleLogout}>
+        <button type="button" className="btn btn-danger my-4" onClick={handleLogout}>
           Logout
         </button>
       </div>
       <div className="row">
-        <div className="card p-4">
+        <div className="card p-2">
           <h1>
             Your TOS submissions:
           </h1>
@@ -65,15 +65,13 @@ function Account() {
                     aria-controls={`collapse-${a.id}`}
                   >
                     <span className="fw-semibold me-2">{a.product_desc}</span>
-                    <small className="text-muted ms-auto">
+                    <h5 className="ms-auto">
                       {a.company_name} &nbsp;|{' '}
                       Score: {a.audit_score ?? '—'} &nbsp;|
                       {' '}{new Date(a.created_at).toLocaleString()} &nbsp;
-                      
-                    </small>
+                    </h5>
                   </button>
                 </h2>
-
                 <div
                   id={`collapse-${a.id}`}
                   className="accordion-collapse collapse"
@@ -82,15 +80,43 @@ function Account() {
                 >
                   <div className="accordion-body">
                     <h6 className="fw-bold">Product Description</h6>
-                    <pre className="bg-light p-2 rounded small">{a.description}</pre>
-                    <h6 className="fw-bold">Terms of Service text</h6>
-                    <pre className="bg-light p-2 rounded small">{a.tos_text}</pre>
-                    <h6 className="fw-bold mt-3">Audit result</h6>
-                    <div className="audit-body">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]}>
-                        {a.audit_text}
-                      </ReactMarkdown>
-                    </div>      
+                    <p className="bg-light p-2 rounded small">{a.description}</p>
+                    <div class="accordion" id="accordionTos">
+                      <div class="accordion-item">
+                        <h2 class="accordion-header">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTos" aria-expanded="false" aria-controls="collapseTos">
+                            Submitted TOS text
+                          </button>
+                        </h2>
+                        <div id="collapseTos" class="accordion-collapse collapse hide" data-bs-parent="#accordionTos">
+                          <div class="accordion-body">
+                            <p className="bg-light p-2 rounded small text-start">{a.tos_text}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="accordion-item">
+                        <h2 class="accordion-header">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAudit" aria-expanded="false" aria-controls="collapseAudit">
+                            Generated Audit
+                          </button>
+                        </h2>
+                        <div id="collapseAudit" class="accordion-collapse collapse hide" data-bs-parent="#accordionAudit">
+                          <div class="accordion-body">
+                            <div className="scroll-x">
+                            <div className="audit-body">
+
+                                              <ReactMarkdown
+                                                remarkPlugins={[remarkGfm]}
+                                                rehypePlugins={[rehypeSanitize]}
+                                              >
+                                                {a.audit_text}
+                                              </ReactMarkdown>
+                                            </div>
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

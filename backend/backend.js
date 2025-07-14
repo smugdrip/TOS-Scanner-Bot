@@ -107,8 +107,9 @@ app.post('/api/submit-tos', verifyToken, async (req, res) => {
       model: 'gpt-4.1',
       input: fullPrompt,
     });
-    const auditText = completion.output_text ?? '';
-    const auditScore = 22;
+    const parsed = JSON.parse(completion.output_text);
+    const auditText = parsed.audit_text ?? 'failed';
+    const auditScore = parsed.audit_score ?? 101;
     const companyName = req.body.company_name;
     const description = req.body.description;
     await pool.execute(
@@ -116,7 +117,7 @@ app.post('/api/submit-tos', verifyToken, async (req, res) => {
        VALUES (?, ?, ?, ?, ?, ?)`,
       [tosText, auditText, auditScore, companyName, description, userId]
     );
-    return res.json({ audit: auditText, score: 67 });
+    return res.json({ audit: auditText, score: auditScore });
   } catch (err) {
     console.error('submit-tos failed:', err);
     return res.status(500).json({ error: 'Server error while submitting TOS' });

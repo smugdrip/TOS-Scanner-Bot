@@ -7,6 +7,8 @@
 
 .audit-body {
   text-align: left;
+  overflow-y: auto;
+  overflow-wrap: break-word;
 }
 
 .audit-body table {
@@ -45,4 +47,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.accordion .accordion-body {
+  max-height: 69vh;
+  overflow-y: auto;
+  overflow-wrap: break-word;
 }

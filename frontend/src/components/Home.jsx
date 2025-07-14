@@ -96,13 +96,15 @@ function Home() {
                     Audit Score: {auditScore}/100
                   </h2>
                 </div>
-                <article className="prose lg:prose-lg mt-6">
-                  <div className="audit-body">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]}>
-                      {audit}
-                    </ReactMarkdown>
-                  </div>
-                </article>
+                <div className="audit-body">
+                  <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
+                    rehypePlugins={[rehypeSanitize]}
+                  >
+                    {audit}
+                  </ReactMarkdown>
+                </div>
+
               </div>
             </div>
           </div>

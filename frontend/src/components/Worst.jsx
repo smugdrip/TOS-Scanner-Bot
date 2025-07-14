@@ -1,14 +1,14 @@
 import Navbar from "./Navbar";
 
-function Popular() {
+function Worst() {
   return (
     <>
     <Navbar/>
     <div className="container-fluid">
       <div className="row">
-        <div className="card p-4">
+        <div className="card p-2">
           <h1>
-            popular page here
+            Here are the worst privacy policies you might agree to!
           </h1>
         </div>
       </div>
@@ -16,4 +16,4 @@ function Popular() {
     </>
   );
 }
-export default Popular;
+export default Worst;

@@ -39,4 +39,7 @@ Justify in no more than three sentences referencing key findings.
 • Do **not** hallucinate external policies or facts not in the TOS.  
 • Finish with the safety score; no additional commentary afterward.  
 
+Output format: Present your report in json format with two sections: first is the Safety Score, second is the Actual audit (including the safety score).
+Example output: {"audit_score": 88, "audit_text": "[audit report here]"}. Do not add json markdown fense in your response. i.e. do not include ```json.
+
 Begin your audit now.
