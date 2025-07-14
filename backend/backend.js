@@ -50,7 +50,7 @@ app.post('/api/login', async (req, res) => {
       const token = jwt.sign(
         { userId: user.id, username: user.username },
         secret,
-        { expiresIn: '1h' }
+        { expiresIn: '3h' }
       );
       return res.json({ token });
     } else {
@@ -90,14 +90,11 @@ app.post('/api/create-account', async (req, res) => {
 // submit tos to AI agent for audit
 app.post('/api/submit-tos', verifyToken, async (req, res) => {
   try {
-
     const tosText = req.body.tos;
     if (!tosText) {
       return res.status(400).json({ error: 'tos field missing' });
     }
-
     const { userId } = req.user;
-
     const [userRows] = await pool.execute(
       'SELECT id FROM users WHERE id = ?',
       [userId]
@@ -105,26 +102,21 @@ app.post('/api/submit-tos', verifyToken, async (req, res) => {
     if (userRows.length === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
-
     const fullPrompt = promptTemplate.replace('{{TOS_TEXT}}', tosText);
     const completion = await openai.responses.create({
       model: 'gpt-4.1',
       input: fullPrompt,
     });
-
     const auditText = completion.output_text ?? '';
-    const auditScore = 6.7;
-    const companyName = 'placeholder name';
-    const description = 'placeholder desc';
-
+    const auditScore = 22;
+    const companyName = req.body.company_name;
+    const description = req.body.description;
     await pool.execute(
       `INSERT INTO tos_audits (tos_text, audit_text, audit_score, company_name, description, user_id)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [tosText, auditText, auditScore, companyName, description, userId]
     );
-
-    return res.json({ audit: auditText });
-
+    return res.json({ audit: auditText, score: 67 });
   } catch (err) {
     console.error('submit-tos failed:', err);
     return res.status(500).json({ error: 'Server error while submitting TOS' });
@@ -142,7 +134,8 @@ app.get('/api/tos-by-user', verifyToken, async (req, res) => {
               description,
               audit_text,
               audit_score,
-              company_name
+              company_name,
+              created_at
        FROM   tos_audits
        WHERE  user_id = ?`,
       [userId]

@@ -26,11 +26,8 @@ Provide a markdown table:
 Summarize **how** the service collects, processes, shares, and retains user data, and **for what purposes**, based solely on the TOS.
 
 ## 4. Safety Score  
-Assign a single **integer 1 (very unsafe) → 10 (very safe)**.  
+Assign a single **integer 0 (very unsafe) → 100 (very safe)**.  
 Justify in no more than three sentences referencing key findings.
-
-## 5. Recommendations  
-List the top five actionable changes that would most improve user-data safety and ethical integrity.
 
 ╔════════════════════════════════════════════════════════════════╗
 ║                       ★  GUIDELINES  ★                        ║
