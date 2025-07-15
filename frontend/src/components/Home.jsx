@@ -23,7 +23,7 @@ function Home() {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
          },
         body: JSON.stringify({ tos: tosText, company_name: companyName, description: productDesc }),
-      })
+      });
       if (!res.ok) throw new Error(`Server error ${res.status}`)
       const result = await res.json()
       setAudit(result.audit);
@@ -65,11 +65,11 @@ function Home() {
             <div className="col">
               <form onSubmit={e => e.preventDefault()}>
                 <div className="mb-4">
-                  <label for="companyNameInput" className="form-label h4">
+                  <label htmlFor="companyNameInput" className="form-label h4">
                     Enter company name:
                   </label>
                   <input type="text" className="form-control mb-4" id="companyNameInput" aria-describedby="companyName" onChange={e => setCompanyName(e.target.value)}/>
-                  <label for="productDescInput" className="form-label h6">
+                  <label htmlFor="productDescInput" className="form-label h6">
                     Enter a brief description of the product the TOS was made for:
                   </label>
                   <textarea rows={5} className="form-control mb-4" id="productDescInput" aria-describedby="companyName" onChange={e => setProductDesc(e.target.value)}/>

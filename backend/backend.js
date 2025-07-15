@@ -137,8 +137,8 @@ app.get('/api/tos-by-user', verifyToken, async (req, res) => {
               audit_score,
               company_name,
               created_at
-       FROM   tos_audits
-       WHERE  user_id = ?`,
+      FROM   tos_audits
+      WHERE  user_id = ?`,
       [userId]
     );
 
@@ -149,6 +149,40 @@ app.get('/api/tos-by-user', verifyToken, async (req, res) => {
     return res.status(500).json({ error: 'Server error while fetching TOS' });
   }
 });
+
+// ordered by audit score, get the next 10 tos audits in descending order
+// idx is included.
+app.get('/api/tos-by-desc-score', async (req, res) => {
+  try {
+    const offset = Number.parseInt(req.query.start_idx ?? '0', 10);
+    if (Number.isNaN(offset) || offset < 0) {
+      return res.status(400).json({ error: 'Invalid start_idx' });
+    }
+
+    const limit = 10;
+    const sql = `
+      SELECT
+        id,
+        tos_text,
+        description,
+        audit_text,
+        audit_score,
+        company_name,
+        created_at
+      FROM tos_audits
+      ORDER BY audit_score DESC
+      LIMIT ${offset}, ${limit};`;
+
+    const [rows] = await pool.query(sql);
+
+    res.json({ audits: rows, has_more: rows.length === limit });
+  } catch (err) {
+    console.error('get tos-by-desc-score failed:', err);
+    res.status(500).json({ error: 'Server error while fetching audits' });
+  }
+});
+
+
 
 // verify the jwt and decode user info for later use
 function verifyToken(req, res, next) {

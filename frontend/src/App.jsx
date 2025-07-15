@@ -6,6 +6,7 @@ import Account from './components/Account';
 import Recent from './components/Recent';
 import Worst from './components/Worst';
 import Best from './components/Best';
+import Test from './components/Test';
 import './App.css'
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <Route path="/recent" element={<Recent/>}/>
       <Route path="/worst" element={<Worst/>}/>
       <Route path="/best" element={<Best/>}/>
+      <Route path="/test" element={<Test/>}/>
     </Routes>
   )
 }
