@@ -10,47 +10,54 @@ function Best() {
   const [audits, setAudits]  = useState([]);
   const [hasMore, setHasMore] = useState(true);
 
-  const fetchAudits = useCallback(async (nextOffset = 0) => {
-    console.log('Fetching best audits.');
+  const fetchAudits = async (curOffset) => {
     try {
-      const res = await fetch(`/api/tos-by-desc-score?start_idx=${nextOffset}`);
-      if (!res.ok) throw new Error(`Server error ${res.status}`);
+      console.log('Fetching audits at offset:', curOffset);
+      const res = await fetch(`/api/tos-by-desc-score?start_idx=${curOffset}`);
       const { audits: rows, has_more } = await res.json();
-
-      setAudits(prev =>
-        nextOffset === 0 ? rows : [...prev, ...rows]
-      );
+      setAudits(rows);
       setHasMore(has_more);
-      setOffset(nextOffset);
-    } catch (err) {
-      console.error('Fetch audits failed:', err);
+    } catch(err) {
+      console.error(err);
     }
-  }, []);
+
+  }
+
+  const loadNext = () => {
+    const newOffset = offset + 10;
+    setOffset(newOffset);
+    fetchAudits(newOffset);
+  }
+
+  const loadPrev = () => {
+    const newOffset = offset - 10;
+    setOffset(newOffset);
+    fetchAudits(newOffset);
+  }
 
   // initial load
-  useEffect(() => { fetchAudits(0); }, [fetchAudits]);
+  useEffect(() => { fetchAudits(0); }, []);
 
   return(
     <>
     <Navbar/>
-    <div className="container-fluid">
+    <div className="container-fluid g-0">
       <div className="row">
-        <div className="card p-2 my-4">
-          <h1>
-            highest rated privacy terms
-          </h1>
-        </div>
+        <h1 className="my-5">
+          highest rated privacy terms
+        </h1>
       </div>
       <div className="row">
+        <div className="col">
 
-        <div className="card p-2">
-          <div className="accordion mt-3" id="tosAccordion">
+        <div className="card" style={{minWidth: "89vw"}}>
+          <div className="accordion m-2 " id="tosAccordion">
             {audits.map((a, idx) => (
               <div key={a.id} className="accordion-item">
                 <h2 className="accordion-header" id={`heading-${a.id}`}>
                   <button
                     className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse-${a.id}`} aria-expanded="false" aria-controls={`collapse-${a.id}`}>
-                    <span className="fw-semibold me-2">{a.product_desc}</span>
+                    <span className="fw-semibold">{a.product_desc}</span>
                     <h5 className="ms-auto">
                       {a.company_name} &nbsp;|{' '}
                       Score: {a.audit_score ?? '—'} &nbsp;|
@@ -61,7 +68,7 @@ function Best() {
                 <div id={`collapse-${a.id}`} className="accordion-collapse collapse" aria-labelledby={`heading-${a.id}`} data-bs-parent="#tosAccordion">
                   <div className="accordion-body">
                     <h6 className="fw-bold">Product Description</h6>
-                    <p className="bg-light p-2 rounded small">{a.description}</p>
+                    <p className="bg-light p-0 rounded small">{a.description}</p>
                     <div className="accordion" id="accordionTos">
                       <div className="accordion-item">
                         <h2 className="accordion-header">
@@ -71,7 +78,7 @@ function Best() {
                         </h2>
                         <div id="collapseTos" className="accordion-collapse collapse hide" data-bs-parent="#accordionTos">
                           <div className="accordion-body">
-                            <p className="bg-light p-2 rounded small text-start">{a.tos_text}</p>
+                            <p className="bg-light p-0 rounded small text-start">{a.tos_text}</p>
                           </div>
                         </div>
                       </div>
@@ -97,6 +104,18 @@ function Best() {
               </div>
             ))}
           </div>
+        </div>
+
+      </div>
+      </div>
+      <div className="row">
+        <div className="col">
+          <button className="btn btn-primary mt-4 p-2 me-2" style={{width: '110px'}} disabled={offset === 0} onClick={loadPrev} >
+            <strong>{'<< '}</strong>Previous
+          </button>
+          <button className="btn btn-primary mt-4 p-2 ms-2" style={{width: '110px'}} disabled={!hasMore} onClick={loadNext}>
+            Next<strong>{' >>'}</strong>
+          </button>
         </div>
       </div>
     </div>
