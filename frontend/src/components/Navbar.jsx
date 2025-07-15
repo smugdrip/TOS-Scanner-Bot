@@ -38,8 +38,8 @@ function Navbar() {
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/recent" end>
-                Recent
+              <NavLink className="nav-link" to="/popular" end>
+                Popular
               </NavLink>
             </li>
             <li className="nav-item">

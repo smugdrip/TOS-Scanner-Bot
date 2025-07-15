@@ -1,6 +1,6 @@
 import Navbar from "./Navbar";
 
-function Recent() {
+function Popular() {
   return(
     <>
     <Navbar/>
@@ -8,7 +8,7 @@ function Recent() {
       <div className="row">
         <div className="card p-4">
           <h1>
-            recent submitted TOS and audits go here!
+            most popular privacy policies
           </h1>
         </div>
       </div>
@@ -17,4 +17,4 @@ function Recent() {
   );
 }
 
-export default Recent;
+export default Popular;
