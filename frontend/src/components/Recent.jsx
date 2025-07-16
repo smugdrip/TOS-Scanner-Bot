@@ -2,16 +2,16 @@ import Navbar from "./Navbar";
 import { useState, useEffect } from 'react';
 import Audits from "./Audits";
 
-function Worst() {
+function Recent() {
 
   const [offset, setOffset]  = useState(0);
   const [audits, setAudits]  = useState([]);
   const [hasMore, setHasMore] = useState(true);
- 
+
   const fetchAudits = async (curOffset) => {
     try {
       console.log('Fetching audits at offset:', curOffset);
-      const res = await fetch(`/api/tos-by-asc-score?start_idx=${curOffset}`);
+      const res = await fetch(`/api/tos-by-recent?start_idx=${curOffset}`);
       const { audits: rows, has_more } = await res.json();
       setAudits(rows);
       setHasMore(has_more);
@@ -41,8 +41,8 @@ function Worst() {
     <Navbar/>
     <div className="container-fluid g-0">
       <div className="row">
-        <h1>
-          lowest rated privacy terms
+        <h1 className="mt-5">
+            recently submitted audits
         </h1>
       </div>
 
@@ -62,4 +62,4 @@ function Worst() {
     </>
   );
 }
-export default Worst;
+export default Recent;

@@ -214,6 +214,38 @@ app.get('/api/tos-by-asc-score', async (req, res) => {
   }
 });
 
+// ordered by created_at, get the next 10 tos audits in descending order
+// row[offset] is included.
+app.get('/api/tos-by-recent', async (req, res) => {
+  try {
+    const offset = Number.parseInt(req.query.start_idx ?? '0', 10);
+    if (Number.isNaN(offset) || offset < 0) {
+      return res.status(400).json({ error: 'Invalid start_idx' });
+    }
+
+    const limit = 10; // audits per page
+    const sql = `
+      SELECT
+        id,
+        tos_text,
+        description,
+        audit_text,
+        audit_score,
+        company_name,
+        created_at
+      FROM tos_audits
+      ORDER BY created_at DESC
+      LIMIT ${offset}, ${limit};`;
+
+    const [rows] = await pool.query(sql);
+
+    res.json({ audits: rows, has_more: rows.length === limit });
+  } catch (err) {
+    console.error('get tos-by-asc-score failed:', err);
+    res.status(500).json({ error: 'Server error while fetching audits' });
+  }
+});
+
 // verify the jwt and decode user info for later use
 function verifyToken(req, res, next) {
   const auth = req.headers.authorization;

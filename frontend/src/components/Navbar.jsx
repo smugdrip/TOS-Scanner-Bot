@@ -43,6 +43,11 @@ function Navbar() {
               </NavLink>
             </li>
             <li className="nav-item">
+              <NavLink className="nav-link" to="/recent" end>
+                Recent
+              </NavLink>
+            </li>
+            <li className="nav-item">
               <NavLink className="nav-link" to="/worst" end>
                 Worst
               </NavLink>
@@ -52,7 +57,6 @@ function Navbar() {
                 Best
               </NavLink>
             </li>
-
           </ul>
           <ul className="navbar-nav ms-md-auto">
 
