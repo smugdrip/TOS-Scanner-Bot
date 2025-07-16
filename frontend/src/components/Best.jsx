@@ -44,7 +44,7 @@ function Best() {
     <Navbar/>
     <div className="container-fluid g-0">
       <div className="row">
-        <h1 className="my-5">
+        <h1 className="mt-5">
           highest rated privacy terms
         </h1>
       </div>

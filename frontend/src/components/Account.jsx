@@ -37,7 +37,7 @@ function Account() {
   return(
     <>
     <Navbar/>
-    <div className="container-fluid">
+    <div className="container-fluid g-0">
       <div className="row mt-5">
         <div className="col">
           <h1>
@@ -49,7 +49,13 @@ function Account() {
         </div>
       </div>
 
+      <h3>
+        your submitted audits:
+      </h3>
+
       <Audits audits={audits}/>
+
+      
 
     </div>
     </>
